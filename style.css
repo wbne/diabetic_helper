@@ -38,6 +38,12 @@ input, input:focus
     border-left-style: hidden;
     border-right-style: hidden;
 }
+img
+{
+    max-width: 500px;
+    max-height: 500px;
+    height: auto;
+}
 #wrapper
 {
     text-align: left;
@@ -101,4 +107,9 @@ input, input:focus
     width: 40%;
     padding-bottom: 50px;
     min-height: 200px;
+}
+#line
+{
+    text-decoration: underline black;
+    z-index: 1;
 }
