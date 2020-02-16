@@ -28,6 +28,15 @@ h1
     color: white;
     padding-top: 15px;
 }
+a, a:visited
+{
+    color: cadetblue;
+}
+a:hover
+{
+    color: navy;
+
+}
 form
 {
     padding-top: 15px;
