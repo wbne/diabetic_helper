@@ -1,0 +1,104 @@
+body
+{
+    text-align: center;
+    max-width: 100%;
+    font-family: 'Open Sans';
+}
+header
+{
+    display: flex;
+
+}
+footer
+{
+    text-align: left;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    padding-left: 5%;
+    margin-left: -2%;
+    margin-right: -2%;
+}
+h1, h2
+{
+    text-decoration: underline dotted maroon 3px;
+}
+h1
+{
+    color: white;
+    padding-top: 15px;
+}
+form
+{
+    padding-top: 15px;
+}
+input, input:focus
+{
+    border-top-style: hidden;
+    border-left-style: hidden;
+    border-right-style: hidden;
+}
+#wrapper
+{
+    text-align: left;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px;
+    margin: -1.5%;
+}
+
+@media screen and (min-width: 900px)
+{
+    #wrapper
+    {
+        flex: 1 1 calc(50% - 2rem);
+
+    }
+    #left
+    {
+        width: calc(50% - 2rem);
+        float: left;
+        background-color: red;
+        height: calc(104% - 2rem);
+        padding-top: 5%;
+        padding-left: 10px;
+        position: relative;
+    }
+    #right
+    {
+        width: calc(50% - 2rem);
+        overflow: hidden;
+        float: left;
+        padding-top: 5%;
+        padding-bottom: 3%;
+        padding-left: 10px;
+        position: relative;
+    }
+}
+.malding
+{
+    margin-top: 50px;
+}
+#blebby:disabled, #blebby:hover
+{
+    background-color: maroon;
+
+}
+#blebby
+{
+    text-decoration: none;
+    border-color: maroon;
+    color: white;
+    background-color: red;
+    height: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+#explanation
+{
+    padding-left: 30%;
+    width: 40%;
+    padding-bottom: 50px;
+    min-height: 200px;
+}

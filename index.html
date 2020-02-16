@@ -1,0 +1,157 @@
+<!DOCTYPE html5>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Blood Sugar Level Tracker</title>
+    <link href="style.css" rel="stylesheet">
+    <link href="script.js" rel="script">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300&display=swap" rel="stylesheet"> 
+    <script>
+        var bsl;
+        var sm;
+        var eMax;
+        var e2hr;
+        var e4hr;
+        var used = false;
+
+        function getdata() //Calculates the data for the rest of the app
+        {
+            document.getElementById("blebby").disabled = true;
+            document.getElementById("invis").hidden = false;
+            var x;
+            bsl = document.getElementById("bsl").value;
+            sm = document.getElementById("sm").value;
+            x = 30.75
+            eMax = parseFloat(sm * -1.978166 * (Math.pow(Math.E, -.0453 * x) - Math.pow(Math.E, -.0224 * x))) + parseFloat(bsl);
+            x = 120;
+            e2hr = parseFloat(sm * -1.978166 * (Math.pow(Math.E, -.0453 * x) - Math.pow(Math.E, -.0224 * x))) + parseFloat(bsl);
+            x = 240;
+            e4hr = parseFloat(sm * -1.978166 * (Math.pow(Math.E, -.0453 * x) - Math.pow(Math.E, -.0224 * x))) + parseFloat(bsl);
+        }
+        function fun1(x) { return (parseFloat(121 * -1.978166 * (Math.pow(Math.E, -.0453 * x) - Math.pow(Math.E, -.0224 * x))) + parseFloat(90)); }
+
+        function draw() //Draws the graph for a visual representation
+        {
+            var canvas = document.getElementById("canvas");
+            if (null == canvas || !canvas.getContext) return;
+
+            var axes = {}, ctx = canvas.getContext("2d");
+            axes.x0 = 0;
+            axes.y0 = canvas.height;
+            axes.scale = 1;
+            axes.doNegativeX = false;
+
+            showAxes(ctx, axes);
+            funGraph(ctx, axes, fun1, "rgb(153,11,11)", 1);
+        }
+
+        function funGraph(ctx, axes, func, color, thick) {
+            var xx, yy, dx = 4, x0 = axes.x0, y0 = axes.y0, scale = axes.scale;
+            var iMax = Math.round((ctx.canvas.width - x0) / dx);
+            var iMin = axes.doNegativeX ? Math.round(-x0 / dx) : 0;
+            ctx.beginPath();
+            ctx.lineWidth = thick;
+            ctx.strokeStyle = color;
+
+            for (var i = iMin; i <= iMax; i++) {
+                xx = dx * i; yy = scale * func(xx / scale);
+                if (i == iMin) ctx.moveTo(x0 + xx, y0 - yy);
+                else ctx.lineTo(x0 + xx, y0 - yy);
+            }
+            ctx.stroke();
+        }
+
+        function showAxes(ctx, axes) {
+            var x0 = axes.x0, w = ctx.canvas.width;
+            var y0 = axes.y0, h = ctx.canvas.height;
+            var xmin = axes.doNegativeX ? 0 : x0;
+            ctx.beginPath();
+            ctx.strokeStyle = "rgb(128,128,128)";
+            ctx.moveTo(xmin, y0); ctx.lineTo(w, y0);  // X axis
+            ctx.moveTo(x0, 0); ctx.lineTo(x0, h);  // Y axis
+            ctx.stroke();
+        }
+        function results() //Tells the user stuff
+        {
+            //The general data
+            const app = document.getElementById('blebs');
+            result1 = document.createElement('p');
+            result1.textContent = "Your peak blood sugar concentration is: " + eMax + " mg/dL";
+            result2 = document.createElement('p');
+            result2.textContent = "Your blood sugar after 2 hours is: " + e2hr + " mg/dL";
+            result3 = document.createElement('p');
+            result3.textContent = "Your blood sugar after 4 hours is: " + e4hr + " mg/dL";
+            app.append(result1);
+            app.append(result2);
+            app.append(result3);    
+
+            //Explanation depending on levels
+            const app2 = document.getElementById('explanation');
+            title1 = document.createElement('h2');
+            title1.textContent = "So What Does This Mean?";
+            app2.append(title1);
+            blob = document.createElement('p');
+            var spheal = "bruh";
+            if (bsl > 125) {
+                spheal = "Oh no! You are considered diabetic because your fasting blood sugar levels are over 126 mg/dL. Here are some things you should consider: You should consult a doctor for proper treatment of diabetes since this is a serious condition that affects 9% of the American population. In addition, you will want to keep your blood sugar level below 120 mg/dL at all times since your body’s physiology starts to change at such concentrated amounts of sugar in your blood. Try to eat less sugary foods and use the glycemic index as a guide to determine what foods you should and shouldn’t eat";
+            }
+            else if (bsl > 100) {
+                spheal = "While you are not diabetic, you could develop diabetes in the next 5 years if your diet does not change. Some ways to reduce your blood sugar levels are eating less sugary foods, exercising more, and being mindful of your health in general.";
+            }
+            else if (bsl > 70) {
+                spheal = "Congratulations! Your blood sugar levels are in acceptable ranges but you should still try to live a healthier life by being conscious of your diet and exercise.";
+            }
+            else {
+                spheal = "Oh no! You have the reverse problem from diabetics and it is called hypoglycemia. This is because your body has too much insulin from either medications or an unlucky set of circumstances. You should consume sugary foods immediately to elevate your blood sugar levels as maintaining this condition for too long can result in death.";
+            }
+            blob.textContent = spheal;
+            app2.append(blob); //behold the wall of text
+        }
+    </script>
+</head>
+
+<header>
+    <div id="wrapper">
+        <div id="left">
+            <h1>Blood Sugar Level Tracker</h1>
+        </div>
+        <div id="right">
+            <form action="/action_page.php">
+                <label for="bsl">Fasting Blood Sugar Level (mg/dL):  </label>
+                <input type="text" id="bsl" name="bsl"><br><br>
+                <label for="sm">Sugar in Next/Previous Meal (grams):</label>
+                <input type="text" id="sm" name="sm"><br><br>
+                <input id="blebby" type="submit" value="Submit" onclick="draw();getdata();results();">
+
+            </form>
+        </div>
+    </div>
+</header>
+
+<body>
+    <h2 id="invis" class="malding" hidden=true>Results</h2>
+    <div id="blebs"></div>
+    <h2 id="invis" hidden=true>Graph of Blood Glucose Level Over Time</h2>
+    <canvas id="canvas" width="400" height="200"></canvas>
+    <div id="explanation"></div>
+    <h2>Fun Facts</h2>
+    <ul><b>American Airlines</b> offers a diabetic meal option, so be sure to inform the flight staff of your conditions!</ul>
+    <ul>Although <b>State Farm</b> doesn't ask about your blood sugar levels, it is important to note that being more prone to cardiovascular diseases would increase rates.</ul>
+    <ul>By knowing your blood sugar levels now and in the future, you can plan your schedule both insulin treatments and work.</ul>
+    <ul>Keeping your blood sugar levels below 120 mg/dL prevents any changes to your physiology.</ul>
+    <ul>Diabetes type 2 is due to poor diet choices while type 1 is due to an unlucky autoimmune attack on the pancreas.</ul>
+    <ul>I know that the graphs generated look the same, but they really are different! Here is a graph that compares a diabetic to a non-diabetic:</ul>
+    <ul>If you want to see the mathematical equation I used, here it is:</ul>
+    <ul></ul>
+</body>
+<footer>
+    <h2>Sources</h2>
+    <ul>Mayo Clinic: General Information</ul>
+    <ul>Esna-Ashari: Overview of BG Modeling</ul>
+    <ul>Estela: Simplified Math Model</ul>
+    <ul>American Airlines: Food Options</ul>
+    <ul>State Farm: Life Insurance Rates</ul>
+</footer>
+
+</html>
